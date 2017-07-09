@@ -26,6 +26,7 @@ type Parser struct {
 	Raw     []byte
 	Result  map[string]interface{}
 	rfc5424 *RFC5424
+	yyfmt   *YYFmt
 }
 
 // NewParser returns a new Parser instance.
@@ -36,7 +37,8 @@ func NewParser(f string) (*Parser, error) {
 
 	p := &Parser{}
 	p.detectFmt(strings.TrimSpace(strings.ToLower(f)))
-	p.newRFC5424Parser()
+	//p.newRFC5424Parser()
+	p.newYYFmtParser()
 	return p, nil
 }
 
@@ -63,7 +65,7 @@ func (p *Parser) detectFmt(f string) {
 func (p *Parser) Parse(b []byte) bool {
 	p.Result = map[string]interface{}{}
 	p.Raw = b
-	p.rfc5424.parse(p.Raw, &p.Result)
+	p.yyfmt.parse(p.Raw, &p.Result)
 	if len(p.Result) == 0 {
 		return false
 	}

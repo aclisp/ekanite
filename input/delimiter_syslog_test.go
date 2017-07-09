@@ -16,28 +16,28 @@ func Test_SyslogDelimiter(t *testing.T) {
 	}{
 		{
 			name:     "simple",
-			line:     "<11>1 sshd is down\n<22>1 sshd is up\n<67>2 password accepted",
-			expected: []string{"<11>1 sshd is down", "<22>1 sshd is up"},
+			line:     "Jan sshd is down\nFeb sshd is up\nMar password accepted",
+			expected: []string{"Jan sshd is down", "Feb sshd is up"},
 		},
 		{
 			name:     "leading",
-			line:     "password accepted for user root<12>1 sshd is down\n<145>1 sshd is up\n<67>2 password accepted",
-			expected: []string{"<12>1 sshd is down", "<145>1 sshd is up"},
+			line:     "password accepted for user rootApr sshd is down\nDec sshd is up\nMar password accepted",
+			expected: []string{"Dec sshd is up"},
 		},
 		{
 			name:     "CRLF",
-			line:     "<12>1 sshd is down\r\n<145>1 sshd is up\r\n<67>2 password accepted",
-			expected: []string{"<12>1 sshd is down", "<145>1 sshd is up"},
+			line:     "Apr sshd is down\r\nDec sshd is up\r\nMar password accepted",
+			expected: []string{"Apr sshd is down", "Dec sshd is up"},
 		},
 		{
 			name:     "stacktrace",
-			line:     "<12>1 sshd is down\n<145>1 OOM on line 42, dummy.java\n\tclass_loader.jar\n<67>2 password accepted",
-			expected: []string{"<12>1 sshd is down", "<145>1 OOM on line 42, dummy.java\n\tclass_loader.jar"},
+			line:     "Apr sshd is down\nDec OOM on line 42, dummy.java\n\tclass_loader.jar\nMar password accepted",
+			expected: []string{"Apr sshd is down", "Dec OOM on line 42, dummy.java\n\tclass_loader.jar"},
 		},
 		{
 			name:     "embedded",
-			line:     "<12>1 sshd is <down>\n<145>1 sshd is up<33>4\n<67>2 password accepted",
-			expected: []string{"<12>1 sshd is <down>", "<145>1 sshd is up<33>4"},
+			line:     "Apr sshd is <down>\nDec sshd is upNov\nMar password accepted",
+			expected: []string{"Apr sshd is <down>", "Dec sshd is upNov"},
 		},
 	}
 
@@ -79,20 +79,20 @@ func TestSyslogDelimiter_Vestige(t *testing.T) {
 		},
 		{
 			name:          "vestige no match",
-			line:          "12\n",
+			line:          "Ja\n",
 			expectedEvent: "",
 			expectedMatch: false,
 		},
 		{
 			name:          "vestige match",
-			line:          "<12>3 ",
-			expectedEvent: "<12>3 ",
+			line:          "Oct ",
+			expectedEvent: "Oct ",
 			expectedMatch: true,
 		},
 		{
 			name:          "vestige rich match",
-			line:          "<145>1 OOM on line 42, dummy.java\n\tclass_loader.jar",
-			expectedEvent: "<145>1 OOM on line 42, dummy.java\n\tclass_loader.jar",
+			line:          "Dec OOM on line 42, dummy.java\n\tclass_loader.jar",
+			expectedEvent: "Dec OOM on line 42, dummy.java\n\tclass_loader.jar",
 			expectedMatch: true,
 		},
 	}

@@ -1,0 +1,26 @@
+Jul  9 13:32:42 warning music_userlist_m.t589375.0609.r[24681]: [src/userlistCache.cpp:350]: <25013>: writeUserListToRedis key=userlist_5773281730523746597_0, should write num=20 ,real write=4
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24681]: [src/channelIssues.cpp:263]: <25013>: fixPolice police set is empty
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24681]: [src/channelIssues.cpp:367]: <25013>: get page method1 of topCid:1344196901 for:1122113277,getSize:5,offset:0 size:21
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24681]: [src/channelIssues.cpp:250]: <25013>: onPGetOnlineUserListReqV2:uid 1122113277, PGetOnlineUserListRspV2  --[result : 0][topCid : 1344196901][subCid : 1344196901][offset : 0][size : 21][endFlag : 1][nCompress: 4149411828]{userList size:5}{extendInfo size:0}
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24046]: [src/channelIssues.cpp:198]: <24715>: onPGetOnlineUserListReqV2:uid 1775565276, topcid 47905876, subcid 47905876,userip 2989297629, terminate [android_4_7_6]
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24046]: [src/userlistCache.cpp:89]: <24715>: getUserListFromRedis get userlist key:userlist_205754170754137172_0
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24046]: [src/channelIssues.cpp:263]: <24715>: fixPolice police set is empty
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24046]: [src/channelIssues.cpp:367]: <24715>: get page method1 of topCid:47905876 for:1775565276,getSize:21,offset:0 size:21
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24046]: [src/channelIssues.cpp:250]: <24715>: onPGetOnlineUserListReqV2:uid 1775565276, PGetOnlineUserListRspV2  --[result : 0][topCid : 47905876][subCid : 47905876][offset : 0][size : 21][endFlag : 2][nCompress: 4148916212]{userList size:21}{extendInfo size:0}
+Jul  9 13:32:42 info music_userlist_m.t589375.0609.r[24681]: [src/channelIssues.cpp:198]: <26252>: onPGetOnlineUserListReqV2:uid 1756403961, topcid 96508020, subcid 96508020,userip 3722735630, terminate [android_6_4_1]
+
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[30641]: [μs:586195][src/dbgateSystem.cpp:237]: <31650>: procDbAndRedis: ip: 101.226.24.7:63722 connId: 507 PSQLQuery  --[dbName : AttentionList_5][hashKey : ][sql : update %   set attr = 0, updatetime = %  , appdata = %   where object =%  and uid =%  and attr = 1;]{mapPOrd_PT : 5}{extraInfo : [1-music_ssdb2mysql_m.t596386.0621.r 2-30128 3-ssdb2mysql 4-0]}[appData : ]
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[30641]: [μs:586238][src/dbgateSystem.cpp:372]: <31650>: procDbAndRedis: Execute SQL on portIndex: 0, port: 2
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[30641]: [μs:586552][../dbcommon2/IDbDao.cpp:358]: <31650>: [sqlExec]:update  idx_attention_list_542    set attr = 0, updatetime = '2017-07-09 13:34:00'  , appdata = 'attentionInterface'   where object = 1748148542  and uid = 1751634616  and attr = 1;
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[30641]: [μs:587320][src/dbgateSystem.cpp:445]: <31650>: procDbAndRedis: SQL Affected row = 1, row count = 0, insertId = 0, warning count = 0, fields number = 0
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[30641]: [μs:587424][src/dbgateSystem.cpp:498]: <31650>: procDbAndRedis: feip: 101.226.24.7:63722 connId: 507 To execute SQL dbName: AttentionList_5, SourceExe: music_ssdb2mysql_m.t596386.0621.r, hashKey:  : update  idx_attention_list_542    set attr = 0, updatetime = '2017-07-09 13:34:00'  , appdata = 'attentionInterface'   where object = 1748148542  and uid = 1751634616  and attr = 1;, size: 0 result:0 usetime: 1
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[29985]: [μs:587778][src/dbgateSystem.cpp:237]: <30044>: procDbAndRedis: ip: 101.226.24.7:59027 connId: 535 PSQLQuery  --[dbName : AttentionList_4][hashKey : ][sql : INSERT INTO %   (uid, object, attr, updatetime, appdata) VALUES (% , % , '1', %  , %  );]{mapPOrd_PT : 5}{extraInfo : [1-music_ssdb2mysql_m.t596386.0621.r 2-30128 3-ssdb2mysql 4-0]}[appData : ]
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[29985]: [μs:587837][src/dbgateSystem.cpp:372]: <30044>: procDbAndRedis: Execute SQL on portIndex: 0, port: 2
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[29985]: [μs:588098][../dbcommon2/IDbDao.cpp:358]: <30044>: [sqlExec]:INSERT INTO  attention_list_414    (uid, object, attr, updatetime, appdata) VALUES ( 578348414 ,  503755 , '1', '2017-07-09 13:34:00'  , 'shenqu.yy.com'  );
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[29985]: [μs:588433][src/dbgateSystem.cpp:445]: <30044>: procDbAndRedis: SQL Affected row = 1, row count = 0, insertId = 0, warning count = 0, fields number = 0
+Jul  9 13:34:00 info music_dbgate_m.t537913.0124.r[29985]: [μs:588508][src/dbgateSystem.cpp:498]: <30044>: procDbAndRedis: feip: 101.226.24.7:59027 connId: 535 To execute SQL dbName: AttentionList_4, SourceExe: music_ssdb2mysql_m.t596386.0621.r, hashKey:  : INSERT INTO  attention_list_414    (uid, object, attr, updatetime, appdata) VALUES ( 578348414 ,  503755 , '1', '2017-07-09 13:34:00'  , 'shenqu.yy.com'  );, size: 0 result:0 usetime: 0
+
+
+# about the yy application's log
+template yy_fmt {template("$DATE $PRIORITY $PROGRAM[$PID]: $MSG\n"); template_escape(no); };
+
