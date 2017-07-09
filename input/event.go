@@ -26,7 +26,7 @@ func (e *Event) ReferenceTime() time.Time {
 		} else if refTime, err := time.Parse(time.Stamp, e.Parsed["timestamp"].(string)); err != nil {
 			e.referenceTime = e.ReceptionTime
 		} else {
-			e.referenceTime = refTime
+			e.referenceTime = refTime.AddDate(2000, 0, 0)
 		}
 
 	}

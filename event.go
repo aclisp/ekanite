@@ -2,7 +2,6 @@ package ekanite
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/ekanite/ekanite/input"
 )
@@ -27,10 +26,10 @@ func (e Event) ID() DocID {
 func (e Event) Data() interface{} {
 	return struct {
 		Message       string
-		ReferenceTime time.Time
+		ReferenceTime string
 	}{
 		Message:       e.Text,
-		ReferenceTime: e.ReferenceTime(),
+		ReferenceTime: e.ReferenceTime().Format("2006-01-02T15:04:05"),
 	}
 }
 
