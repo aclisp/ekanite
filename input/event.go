@@ -23,7 +23,7 @@ func (e *Event) ReferenceTime() time.Time {
 	if e.referenceTime.IsZero() {
 		if e.Parsed == nil {
 			e.referenceTime = e.ReceptionTime
-		} else if refTime, err := time.Parse(time.RFC3339, e.Parsed["timestamp"].(string)); err != nil {
+		} else if refTime, err := time.Parse(time.Stamp, e.Parsed["timestamp"].(string)); err != nil {
 			e.referenceTime = e.ReceptionTime
 		} else {
 			e.referenceTime = refTime

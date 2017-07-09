@@ -2,6 +2,7 @@ package ekanite
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ekanite/ekanite/input"
 )
@@ -25,9 +26,11 @@ func (e Event) ID() DocID {
 // Data returns the indexable data.
 func (e Event) Data() interface{} {
 	return struct {
-		Message string
+		Message       string
+		ReferenceTime time.Time
 	}{
-		Message: e.Text,
+		Message:       e.Text,
+		ReferenceTime: e.ReferenceTime(),
 	}
 }
 
