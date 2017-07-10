@@ -16,6 +16,7 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/custom"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/analysis/char/regexp"
 	"github.com/blevesearch/bleve/analysis/token/length"
 	"github.com/blevesearch/bleve/analysis/token/lowercase"
 	"github.com/blevesearch/bleve/analysis/tokenizer/whitespace"
@@ -448,10 +449,19 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 		return nil, err
 	}
 
+	err = indexMapping.AddCustomCharFilter("ekanite_char",
+		map[string]interface{}{
+			"type":   regexp.Name,
+			"regexp": `[\[\]{},]`,
+		})
+	if err != nil {
+		return nil, err
+	}
+
 	err = indexMapping.AddCustomAnalyzer("ekanite",
 		map[string]interface{}{
 			"type":          custom.Name,
-			"char_filters":  []interface{}{},
+			"char_filters":  []interface{}{`ekanite_char`},
 			"tokenizer":     `ekanite_tk`,
 			"token_filters": []interface{}{lowercase.Name, `ekanite_tk_len`},
 		})
@@ -474,7 +484,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 
 	keywordJustIndexed := bleve.NewTextFieldMapping()
 	keywordJustIndexed.Store = false
-	keywordJustIndexed.IncludeInAll = true
+	keywordJustIndexed.IncludeInAll = false
 	keywordJustIndexed.IncludeTermVectors = false
 	keywordJustIndexed.Analyzer = keyword.Name
 
