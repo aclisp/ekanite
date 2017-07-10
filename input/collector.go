@@ -22,7 +22,7 @@ func init() {
 
 const (
 	newlineTimeout = time.Duration(1000 * time.Millisecond)
-	msgBufSize     = 256
+	msgBufSize     = 512
 )
 
 // Collector specifies the interface all network collectors must implement.

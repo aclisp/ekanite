@@ -7,7 +7,7 @@ import (
 
 const (
 	// @see https://github.com/hpcugent/logstash-patterns/blob/master/files/grok-patterns
-	MONTH           = `\b(?:Jan(?:uary|uar)?|Feb(?:ruary|ruar)?|M(?:a|ä)?r(?:ch|z)?|Apr(?:il)?|Ma(?:y|i)?|Jun(?:e|i)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|O(?:c|k)?t(?:ober)?|Nov(?:ember)?|De(?:c|z)(?:ember)?)\b`
+	MONTH           = `\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b`
 	MONTHDAY        = `(?:(?:0[1-9])|(?:[12][0-9])|(?:3[01])|[1-9])`
 	HOUR            = `(?:2[0123]|[01]?[0-9])`
 	MINUTE          = `(?:[0-5][0-9])`

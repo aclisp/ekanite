@@ -15,7 +15,11 @@ import (
 
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/custom"
-	"github.com/blevesearch/bleve/analysis/tokenizer/regexp"
+	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
+	"github.com/blevesearch/bleve/analysis/token/length"
+	"github.com/blevesearch/bleve/analysis/token/lowercase"
+	"github.com/blevesearch/bleve/analysis/tokenizer/whitespace"
+	"github.com/blevesearch/bleve/index/store/goleveldb"
 	"github.com/blevesearch/bleve/mapping"
 )
 
@@ -339,7 +343,9 @@ func (s *Shard) Open() error {
 		if err != nil {
 			return err
 		}
-		s.b, err = bleve.New(s.path, mapping)
+		//s.b, err = bleve.New(s.path, mapping)
+		s.b, err = bleve.NewUsing(s.path, mapping, bleve.Config.DefaultIndexType,
+			goleveldb.Name, map[string]interface{}{})
 		if err != nil {
 			return fmt.Errorf("bleve new: %s", err.Error())
 		}
@@ -425,8 +431,18 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	indexMapping := bleve.NewIndexMapping()
 	err = indexMapping.AddCustomTokenizer("ekanite_tk",
 		map[string]interface{}{
-			"regexp": `[^\W_]+`,
-			"type":   regexp.Name,
+			//"regexp": `[^\W_]+`,
+			//"type":   regexp.Name,
+			"type": whitespace.Name,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	err = indexMapping.AddCustomTokenFilter("ekanite_tk_len",
+		map[string]interface{}{
+			"type": length.Name,
+			"min":  float64(10),
 		})
 	if err != nil {
 		return nil, err
@@ -437,7 +453,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 			"type":          custom.Name,
 			"char_filters":  []interface{}{},
 			"tokenizer":     `ekanite_tk`,
-			"token_filters": []interface{}{`to_lower`},
+			"token_filters": []interface{}{lowercase.Name, `ekanite_tk_len`},
 		})
 	if err != nil {
 		return nil, err
@@ -456,12 +472,21 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	timeJustIndexed.IncludeInAll = false
 	timeJustIndexed.IncludeTermVectors = false
 
+	keywordJustIndexed := bleve.NewTextFieldMapping()
+	keywordJustIndexed.Store = false
+	keywordJustIndexed.IncludeInAll = true
+	keywordJustIndexed.IncludeTermVectors = false
+	keywordJustIndexed.Analyzer = keyword.Name
+
 	articleMapping := bleve.NewDocumentMapping()
 
 	// Connect field mappings to fields.
 	articleMapping.AddFieldMappingsAt("Message", simpleJustIndexed)
 	articleMapping.AddFieldMappingsAt("ReferenceTime", timeJustIndexed)
-	articleMapping.AddFieldMappingsAt("ReceptionTime", timeJustIndexed)
+	//articleMapping.AddFieldMappingsAt("ReceptionTime", timeJustIndexed)
+	articleMapping.AddFieldMappingsAt("Priority", keywordJustIndexed)
+	articleMapping.AddFieldMappingsAt("App", keywordJustIndexed)
+	articleMapping.AddFieldMappingsAt("Pid", keywordJustIndexed)
 
 	// Tell the index about field mappings.
 	indexMapping.DefaultMapping = articleMapping
