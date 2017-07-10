@@ -134,7 +134,7 @@ func (s *TCPCollector) handleConnection(conn net.Conn, c chan<- *Event) {
 		stats.Add("tcpBytesRead", int64(len(log)))
 		stats.Add("tcpEventsRx", 1)
 		log = strings.TrimRight(log, "\r\n")
-		if parser.Parse(bytes.NewBufferString(log).Bytes()) {
+		if len(log) > 0 && parser.Parse([]byte(log)) {
 			c <- &Event{
 				Text:          string(parser.Raw),
 				Parsed:        parser.Result,
