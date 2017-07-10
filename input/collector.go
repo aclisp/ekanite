@@ -117,47 +117,35 @@ func (s *TCPCollector) handleConnection(conn net.Conn, c chan<- *Event) {
 		panic(fmt.Sprintf("failed to create TCP connection parser:%s", err.Error()))
 	}
 
-	delimiter := NewSyslogDelimiter(msgBufSize)
 	reader := bufio.NewReader(conn)
 	var log string
-	var match bool
 
 	for {
-		conn.SetReadDeadline(time.Now().Add(newlineTimeout))
-		b, err := reader.ReadByte()
+		log, err = reader.ReadString('\n')
 		if err != nil {
 			stats.Add("tcpConnReadError", 1)
-			if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
-				stats.Add("tcpConnReadTimeout", 1)
-			} else if err == io.EOF {
+			if err == io.EOF {
 				stats.Add("tcpConnReadEOF", 1)
 			} else {
 				stats.Add("tcpConnUnrecoverError", 1)
-				return
 			}
-
-			log, match = delimiter.Vestige()
-		} else {
-			stats.Add("tcpBytesRead", 1)
-			log, match = delimiter.Push(b)
 		}
 
-		// Log line available?
-		if match {
-			stats.Add("tcpEventsRx", 1)
-			if parser.Parse(bytes.NewBufferString(log).Bytes()) {
-				c <- &Event{
-					Text:          string(parser.Raw),
-					Parsed:        parser.Result,
-					ReceptionTime: time.Now().UTC(),
-					Sequence:      atomic.AddInt64(&sequenceNumber, 1),
-					SourceIP:      conn.RemoteAddr().String(),
-				}
+		stats.Add("tcpBytesRead", int64(len(log)))
+		stats.Add("tcpEventsRx", 1)
+		log = strings.TrimRight(log, "\r\n")
+		if parser.Parse(bytes.NewBufferString(log).Bytes()) {
+			c <- &Event{
+				Text:          string(parser.Raw),
+				Parsed:        parser.Result,
+				ReceptionTime: time.Now().UTC(),
+				Sequence:      atomic.AddInt64(&sequenceNumber, 1),
+				SourceIP:      conn.RemoteAddr().String(),
 			}
 		}
 
 		// Was the connection closed?
-		if err == io.EOF {
+		if err != nil {
 			return
 		}
 	}
