@@ -2,7 +2,6 @@ package ekanite
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/ekanite/ekanite/input"
 )
@@ -30,13 +29,13 @@ func (e Event) Data() interface{} {
 		ReferenceTime string
 		Priority      string
 		App           string
-		Pid           string
+		//Pid           string
 	}{
 		Message:       e.Parsed["message"].(string),
 		ReferenceTime: e.ReferenceTime().Format("2006-01-02T15:04:05"),
 		Priority:      e.Parsed["priority"].(string),
 		App:           e.Parsed["app"].(string),
-		Pid:           strconv.Itoa(e.Parsed["pid"].(int)),
+		//Pid:           strconv.Itoa(e.Parsed["pid"].(int)),
 	}
 }
 

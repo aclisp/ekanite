@@ -19,7 +19,6 @@ import (
 	"github.com/blevesearch/bleve/analysis/char/regexp"
 	"github.com/blevesearch/bleve/analysis/token/length"
 	"github.com/blevesearch/bleve/analysis/token/lowercase"
-	"github.com/blevesearch/bleve/analysis/tokenizer/whitespace"
 	"github.com/blevesearch/bleve/index/store/goleveldb"
 	"github.com/blevesearch/bleve/mapping"
 )
@@ -432,9 +431,9 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	indexMapping := bleve.NewIndexMapping()
 	err = indexMapping.AddCustomTokenizer("ekanite_tk",
 		map[string]interface{}{
-			//"regexp": `[^\W_]+`,
-			//"type":   regexp.Name,
-			"type": whitespace.Name,
+			"regexp": `\b[0-9\.\:]{10,25}\b`,
+			"type":   regexp.Name,
+			//"type": whitespace.Name,
 		})
 	if err != nil {
 		return nil, err
@@ -444,6 +443,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 		map[string]interface{}{
 			"type": length.Name,
 			"min":  float64(10),
+			"max":  float64(25),
 		})
 	if err != nil {
 		return nil, err
@@ -474,7 +474,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 
 	simpleJustIndexed := bleve.NewTextFieldMapping()
 	simpleJustIndexed.Store = false
-	simpleJustIndexed.IncludeInAll = true // XXX Move to false when using AST
+	simpleJustIndexed.IncludeInAll = false
 	simpleJustIndexed.IncludeTermVectors = false
 
 	timeJustIndexed := bleve.NewDateTimeFieldMapping()
@@ -496,7 +496,11 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	//articleMapping.AddFieldMappingsAt("ReceptionTime", timeJustIndexed)
 	articleMapping.AddFieldMappingsAt("Priority", keywordJustIndexed)
 	articleMapping.AddFieldMappingsAt("App", keywordJustIndexed)
-	articleMapping.AddFieldMappingsAt("Pid", keywordJustIndexed)
+	//articleMapping.AddFieldMappingsAt("Pid", keywordJustIndexed)
+
+	// _all (disabled)
+	disabledSection := bleve.NewDocumentDisabledMapping()
+	articleMapping.AddSubDocumentMapping("_all", disabledSection)
 
 	// Tell the index about field mappings.
 	indexMapping.DefaultMapping = articleMapping
