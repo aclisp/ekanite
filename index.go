@@ -16,9 +16,11 @@ import (
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/custom"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
-	"github.com/blevesearch/bleve/analysis/char/regexp"
+	chregexp "github.com/blevesearch/bleve/analysis/char/regexp"
 	"github.com/blevesearch/bleve/analysis/token/length"
 	"github.com/blevesearch/bleve/analysis/token/lowercase"
+	//tkregexp "github.com/blevesearch/bleve/analysis/tokenizer/regexp"
+	"github.com/blevesearch/bleve/analysis/tokenizer/whitespace"
 	"github.com/blevesearch/bleve/index/store/goleveldb"
 	"github.com/blevesearch/bleve/mapping"
 )
@@ -431,9 +433,9 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	indexMapping := bleve.NewIndexMapping()
 	err = indexMapping.AddCustomTokenizer("ekanite_tk",
 		map[string]interface{}{
-			"regexp": `\b[0-9\.\:]{10,25}\b`,
-			"type":   regexp.Name,
-			//"type": whitespace.Name,
+			//"regexp": `[^\W_]+`,
+			//"type":   tkregexp.Name,
+			"type": whitespace.Name,
 		})
 	if err != nil {
 		return nil, err
@@ -443,7 +445,6 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 		map[string]interface{}{
 			"type": length.Name,
 			"min":  float64(10),
-			"max":  float64(25),
 		})
 	if err != nil {
 		return nil, err
@@ -451,7 +452,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 
 	err = indexMapping.AddCustomCharFilter("ekanite_char",
 		map[string]interface{}{
-			"type":   regexp.Name,
+			"type":   chregexp.Name,
 			"regexp": `[\[\]{},]`,
 		})
 	if err != nil {
@@ -496,7 +497,7 @@ func buildIndexMapping() (*mapping.IndexMappingImpl, error) {
 	//articleMapping.AddFieldMappingsAt("ReceptionTime", timeJustIndexed)
 	articleMapping.AddFieldMappingsAt("Priority", keywordJustIndexed)
 	articleMapping.AddFieldMappingsAt("App", keywordJustIndexed)
-	//articleMapping.AddFieldMappingsAt("Pid", keywordJustIndexed)
+	articleMapping.AddFieldMappingsAt("Pid", keywordJustIndexed)
 
 	// _all (disabled)
 	disabledSection := bleve.NewDocumentDisabledMapping()
